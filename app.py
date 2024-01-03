@@ -11,12 +11,13 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-# escreva uma rota para requisição post
+# escreva uma rota (predict) para requisição post
 @app.route('' , methods = [''])
-def review():
+def predict():
 
+    response = ""
     # extraia a avaliação do cliente escrevendo a "chave" apropriada dos dados JSON
-    review = request.json.get('')
+    review = request.json.get('customer_review')
 
     # verifique se a avaliação do cliente está vazia, então retorne o erro
     if not review:
@@ -29,11 +30,12 @@ def review():
     # exemplo : Positivo , ./static/assets/emoticons/positive.png
 
     else:
+        sentiment , emoji_url = sa.predict(review)
+        response = jsonify({'status' : 'Success',
+                            'prediction' : sentiment,
+                            'url' : emoji_url})
 
-        _ , _ = sa.predict(review)
-
-        return jsonify({'':'' , '':''})
-
+    return response
 
 if __name__  ==  "__main__":
     app.run(debug = True)
